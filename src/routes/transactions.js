@@ -18,23 +18,33 @@ router.post("/transactions/:userId", async (req, res) => {
     // find user by id
     let user_result = await user.findById(req.params.userId);
 
+    //console.log(user_result);
+
     const newTransactionModel = new transactions({
       uid: user_result._id,
-      amount: 40000,
-      date: Date.now(),
-      evidence: "http//:img.proof",
-      type: "loan"
+      ...req.body
     });
     console.log("newTransactionModel", newTransactionModel);
     await newTransactionModel.save();
+    console.log("Insert Transaction Success");
+    
+    //if(req.body.type === "loan"){
+        console.log("Transaction Type Loan: " );
+        await user.updateOne(
+            { _id: user_result._id },
+            { $inc: { totalLoan: req.body.amount } }
+          );
+          console.log("********Update User Success");
+      
+          let financial_result = await financialInfo.find();
+          await financialInfo.updateOne(
+            { _id: financial_result[0]._id },
+            { $inc: { totalDebt: req.body.amount } }
+          );
+          console.log("********Update Financial Success");
+    //}
+    
 
-    await userModel.update(
-      { _id: ObjectId("5e5f4b23cccb9436f40a771d") },
-      { $inc: { totalLoan: 40000 } }
-    );
-    await userModel.save();
-    // await financialModel.update({ _id: "5e5e249006400b2c10ec9f2a" }, { $inc: { totalDebt: 40000} })
-    // await financialModel.save()
     res.status(201).end();
   } catch (error) {
     res.status(400).json(error);
