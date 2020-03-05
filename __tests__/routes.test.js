@@ -2,13 +2,21 @@ const supertest = require("supertest");
 const mongoose = require("mongoose");
 const { app, start } = require("../src/routes/routes");
 
+// beforeAll(async () => {
+//   const financials = await supertest(app)
+//     .post("/financials")
+//     .send({});
+//   console.log(financials);
+// });
+
 beforeEach(async () => {
   await start("mongodb://103.74.254.244:27017/testoddsInstallmentDB");
 });
+
 afterEach(async () => {
   const collections = await mongoose.connection.db.collections();
   for (let collection of collections) {
-    await collection.remove();
+    await collection.deleteMany();
   }
   await mongoose.connection.close();
 });
@@ -48,4 +56,30 @@ test("test search by firstName", async () => {
 
   expect(response.status).toEqual(200);
   expect(response.body[0].firstName).toEqual("Angkana");
+});
+
+test("Insert transaction", async () => {
+  await supertest(app)
+    .post("/financials")
+    .send({});
+
+  const user = await supertest(app)
+    .post("/users")
+    .send({
+      firstName: "Angkana",
+      lastName: "Luprasit",
+      nickName: "Hmoo",
+      email: "pirom@gmail.com",
+      phone: "0931235533"
+    });
+  //console.log(user.body);
+  const response = await supertest(app)
+    .post("/transactions/" + user.body._id)
+    .send({
+      amount: 40000,
+      evidence: "http//:img.proof",
+      type: "loan"
+    });
+
+  expect(response.status).toEqual(201);
 });
