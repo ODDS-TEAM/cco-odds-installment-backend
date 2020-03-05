@@ -1,10 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
+const user = require('./user')
 const TransactionsSchema = new Schema({
-  uid: Schema.Types.ObjectId,
+  uid: { type: Schema.Types.ObjectId, ref: user },
   amount: Number,
-  date: Date,
+  date: {
+    type: Date,
+    default: Date.now()
+  },
   evidence: String,
   type: String
 });
