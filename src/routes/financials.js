@@ -11,4 +11,19 @@ router.get("/financials", async (req, res) => {
   }
 });
 
+router.post("/financials", async (req, res) => {
+  try {
+    let finacials = new financialInfo({
+      totalDebt: 0,
+      totalPaidAmount: 0,
+      totalRemainingAmount: 0
+    });
+
+    await finacials.save();
+    res.send(finacials);
+  } catch (error) {
+    res.status(500).send();
+  }
+});
+
 module.exports = router;
