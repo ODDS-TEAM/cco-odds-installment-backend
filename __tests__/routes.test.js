@@ -51,7 +51,7 @@ test("test search by firstName", async () => {
   expect(response.body[0].firstName).toEqual("Angkana");
 });
 
-test("Insert transaction", async () => {
+test("Insert transaction type loan", async () => {
   await supertest(app)
     .post("/financials")
     .send({});
@@ -73,6 +73,30 @@ test("Insert transaction", async () => {
       evidence: "http//:img.proof",
       type: "loan"
     });
+  expect(response.status).toEqual(201);
+});
 
+test("Insert transaction type payment", async () => {
+  await supertest(app)
+    .post("/financials")
+    .send({});
+
+  const user = await supertest(app)
+    .post("/users")
+    .send({
+      firstName: "Angkana",
+      lastName: "Luprasit",
+      nickName: "Hmoo",
+      email: "pirom@gmail.com",
+      phone: "0931235533"
+    });
+  //console.log(user.body);
+  const response = await supertest(app)
+    .post("/transactions/" + user.body._id)
+    .send({
+      amount: 40000,
+      evidence: "http//:img.proof",
+      type: "payment"
+    });
   expect(response.status).toEqual(201);
 });

@@ -27,28 +27,93 @@ router.post("/transactions/:userId", async (req, res) => {
     console.log("newTransactionModel", newTransactionModel);
     await newTransactionModel.save();
     console.log("Insert Transaction Success");
-    
-    //if(req.body.type === "loan"){
-        console.log("Transaction Type Loan: " );
-        await user.updateOne(
-            { _id: user_result._id },
-            { $inc: { totalLoan: req.body.amount } }
-          );
-          console.log("********Update User Success");
-      
-          let financial_result = await financialInfo.find();
-          await financialInfo.updateOne(
-            { _id: financial_result[0]._id },
-            { $inc: { totalDebt: req.body.amount } }
-          );
-          console.log("********Update Financial Success");
-    //}
-    
+
+    // find financial
+    let financial_result = await financialInfo.find();
+
+    if (req.body.type === "loan") {
+      console.log("Transaction Type Loan: ");
+      await user.updateOne(
+        { _id: user_result._id },
+        { $inc: { totalLoan: req.body.amount } }
+      );
+      console.log("********Update User Success");
+
+      await financialInfo.updateOne(
+        { _id: financial_result[0]._id },
+        {
+          $inc: { totalDebt: req.body.amount },
+          totalRemainingAmount:
+            financial_result[0].totalDebt -
+            (financial_result[0].totalPaidAmount + req.body.amount)
+        }
+      );
+      console.log("********Update Financial Success");
+    } else {
+      console.log("Transaction Type payment: ", financial_result[0]);
+      await user.updateOne(
+        { _id: user_result._id },
+        {
+          $inc: {
+            paidAmount: req.body.amount
+          },
+          remainingAmount:
+            user_result.totalLoan - (user_result.paidAmount + req.body.amount)
+        }
+      );
+
+      console.log("********Update User Success");
+
+      await financialInfo.updateOne(
+        { _id: financial_result[0]._id },
+        {
+          $inc: {
+            totalPaidAmount: req.body.amount
+          },
+          totalRemainingAmount:
+            financial_result[0].totalDebt -
+            (financial_result[0].totalPaidAmount + req.body.amount)
+        }
+      );
+      console.log("********Update Financial Success");
+    }
 
     res.status(201).end();
   } catch (error) {
-    res.status(400).json(error);
+    res.status(500).json(error);
   }
 });
 
 module.exports = router;
+
+// else {
+//   console.log("Transaction Type payment: ");
+//   await user.updateOne(
+//     { _id: user_result._id },
+//     {
+//       $inc: {
+//         paidAmount: req.body.amount
+//       }
+//     },
+//     {
+//       $set: {
+//         remainingAmount:
+//           totalLoan - (user_result.paidAmount + req.body.amount)
+//       }
+//     }
+//   );
+
+//   console.log("********Update User Success");
+
+//   await financialInfo.updateOne(
+//     { _id: financial_result[0]._id },
+//     { $inc: { totalPaidAmount: amount } },
+//     {
+//       $set: {
+//         totalRemainingAmount:
+//           financial_result.totalDebt - (totalPaidAmount + req.body.amount)
+//       }
+//     }
+//   );
+//   console.log("********Update Financial Success");
+// }
