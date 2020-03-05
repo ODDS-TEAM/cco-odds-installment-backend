@@ -2,13 +2,6 @@ const supertest = require("supertest");
 const mongoose = require("mongoose");
 const { app, start } = require("../src/routes/routes");
 
-// beforeAll(async () => {
-//   const financials = await supertest(app)
-//     .post("/financials")
-//     .send({});
-//   console.log(financials);
-// });
-
 beforeEach(async () => {
   await start("mongodb://103.74.254.244:27017/testoddsInstallmentDB");
 });
