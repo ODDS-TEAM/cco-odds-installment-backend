@@ -49,7 +49,7 @@ router.post("/transactions/:userId", async (req, res) => {
         }
       );
       console.log("********Update Financial Success");
-    } else {
+    } else if ("payment") {
       console.log("Transaction Type payment: ", financial_result[0]);
       await user.updateOne(
         { _id: user_result._id },
@@ -78,7 +78,7 @@ router.post("/transactions/:userId", async (req, res) => {
       console.log("********Update Financial Success");
     }
 
-    res.status(201).end();
+    res.send({user : await user.findById(req.params.userId) , financial : await financialInfo.find(), transaction : newTransactionModel , reqBody : req.body});
   } catch (error) {
     res.status(500).json(error);
   }
