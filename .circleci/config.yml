@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@1.1.6
 jobs:
-  build-and-test:
+  testing:
     executor:
       name: node/default
     steps:
@@ -11,7 +11,21 @@ jobs:
           steps:
             - run: npm install
             - run: npm test
+  deployment:
+    executor:
+      name:  node/default
+    steps:
+      - run:
+          name: Shell to server
+          command: |
+            mkdir ~/.ssh
+            touch ~/.ssh/known_hosts
+            ssh-keyscan -H 103.74.254.244 >> ~/.ssh/known_hosts
+            ssh nc-user@103.74.254.244 ./runner.sh
 workflows:
-    build-and-test:
+    test-and-deploy:
       jobs:
-        - build-and-test
+        - testing
+        - deployment:
+            requires:
+              - testing
