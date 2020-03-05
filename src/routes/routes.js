@@ -10,7 +10,7 @@ const financialsRoute = require("./financials");
 const user = require("../db/user");
 
 async function start(
-  name = "mongodb://103.74.254.244:27017/oddsInstallmentDB"
+  name 
 ) {
   try {
     await mongoose.connect(name, {
