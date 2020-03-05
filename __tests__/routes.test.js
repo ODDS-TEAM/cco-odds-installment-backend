@@ -73,7 +73,23 @@ test("Insert transaction type loan", async () => {
       evidence: "http//:img.proof",
       type: "loan"
     });
-  expect(response.status).toEqual(201);
+
+  expect(response.status).toEqual(200);
+  //user
+  expect(response.body.user.totalLoan).toEqual(40000)
+  expect(response.body.user.paidAmount).toEqual(0)
+  expect(response.body.user.remainingAmount).toEqual(0)
+
+  //Financial
+  expect(response.body.financial[0].totalDebt).toEqual(40000)
+  expect(response.body.financial[0].totalPaidAmount).toEqual(0)
+  expect(response.body.financial[0].totalRemainingAmount).toEqual(-40000)
+
+  expect(response.body.transaction.amount).toEqual(40000)
+  expect(response.body.transaction.type).toEqual("loan")
+
+
+
 });
 
 test("Insert transaction type payment", async () => {
@@ -98,5 +114,19 @@ test("Insert transaction type payment", async () => {
       evidence: "http//:img.proof",
       type: "payment"
     });
-  expect(response.status).toEqual(201);
+
+    console.log(response.body);
+    expect(response.status).toEqual(200);
+    //user
+    expect(response.body.user.totalLoan).toEqual(0)
+    expect(response.body.user.paidAmount).toEqual(40000)
+    expect(response.body.user.remainingAmount).toEqual(-40000)
+  
+    //Financial
+    expect(response.body.financial[0].totalDebt).toEqual(0)
+    expect(response.body.financial[0].totalPaidAmount).toEqual(40000)
+    expect(response.body.financial[0].totalRemainingAmount).toEqual(-40000)
+  
+    expect(response.body.transaction.amount).toEqual(40000)
+    expect(response.body.transaction.type).toEqual("payment")
 });
