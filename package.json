@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
+    "start-test": "MONGOURL=mongodb://103.74.254.244:27017/oddsInstallmentDBtest node server.js",
     "test": "jest"
   },
   "keywords": [],
