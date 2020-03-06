@@ -112,7 +112,7 @@ test("Insert transaction type payment", async () => {
       type: "payment"
     });
 
-  console.log(response.body);
+  //console.log(response.body);
   expect(response.status).toEqual(200);
   //user
   expect(response.body.user.totalLoan).toEqual(0);
