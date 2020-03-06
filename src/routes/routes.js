@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+const cors = require('cors')
 const mongoose = require("mongoose");
 const financialInfo = require("../db/financialInfo");
 const transactions = require("../db/transactions");
@@ -20,6 +21,7 @@ async function start(
       useFindAndModify: false
     });
 
+    app.use(cors())
     app.use(bodyParser.json());
     app.use(userRoute);
     app.use(transactionsRoute);
