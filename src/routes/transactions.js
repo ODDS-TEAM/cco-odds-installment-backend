@@ -18,7 +18,6 @@ router.post("/transactions/:userId", async (req, res) => {
     // find user by id
     let user_result = await user.findById(req.params.userId);
 
-    //console.log(user_result);
 
     // find financial
     let financial_result = await financialInfo.find();
