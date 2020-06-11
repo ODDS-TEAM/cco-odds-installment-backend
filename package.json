@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
+    "serve": "./node_modules/.bin/nodemon server.js",
     "start-test": "MONGOURL=mongodb://103.74.254.244:27017/oddsInstallmentDBtest node server.js",
     "test": "jest"
   },
@@ -20,7 +21,7 @@
   },
   "devDependencies": {
     "jest": "^25.1.0",
-    "nodemon": "^2.0.2",
+    "nodemon": "^2.0.4",
     "supertest": "^4.0.2"
   }
 }
