@@ -49,4 +49,9 @@ app.post('/loans/:id/installments', async (req, res) => {
     res.send(loan)
 })
 
+app.get('/loans/amount/remaining', (req, res) => {
+    let amount = 100
+    res.send({ amount })
+})
+
 module.exports = { app };
