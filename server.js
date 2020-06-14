@@ -1,4 +1,4 @@
-const { app, start } = require("./src/routes/routes");
+const { app } = require("./src/app");
 const mongoose = require("mongoose");
 
 const port = process.env.PORT || 3000;
@@ -21,6 +21,6 @@ db.on('error', err => {
 })
 
 
-start();
+// start();
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
