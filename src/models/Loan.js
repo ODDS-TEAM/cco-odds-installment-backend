@@ -9,7 +9,8 @@ const loanSchema = new Schema({
         name: String,
         email: String,
         tel: String
-    }
+    },
+    installments: Array
 })
 
 module.exports = mongoose.model('Loan', loanSchema)
