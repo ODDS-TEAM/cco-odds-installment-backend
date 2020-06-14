@@ -49,9 +49,16 @@ app.post('/loans/:id/installments', async (req, res) => {
     res.send(loan)
 })
 
-app.get('/loans/amount/remaining', (req, res) => {
-    let amount = 100
-    res.send({ amount })
+app.get('/loans/amount/remaining', async (req, res) => {
+    const amount = await Installment.aggregate([{
+        $group: {
+            _id: null,
+            totalAmount: {
+                $sum: "$amount"
+            }
+        }
+    }])
+    res.send({ amount: amount[0].totalAmount })
 })
 
 module.exports = { app };
