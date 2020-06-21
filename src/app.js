@@ -16,17 +16,17 @@ app.get('/loans', async (req, res) => {
 
 app.post('/loans', async (req, res) => {
     let loan = new Loan({
-        title: "ซื้อ Mac Book Pro ATB",
+        title: req.body.title,
         date: new Date(),
-        total: 150000,
+        total: req.body.total,
         user: {
-            name: "Athibet",
-            email: "atb@odds.team",
-            tel: "1234"
+            name: req.body.name,
+            email: req.body.email,
+            tel: req.body.tel
         }
     })
-    let result = await loan.save()
-    res.send(result)
+    await loan.save()
+    res.sendStatus(200)
 })
 
 app.get('/loans/:id', async (req, res) => {
